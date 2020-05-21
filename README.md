@@ -1,8 +1,10 @@
-# AMP for Endpoints Policy Exclusion Statistics
+[![Gitter chat](https://img.shields.io/badge/gitter-join%20chat-brightgreen.svg)](https://gitter.im/CiscoSecurity/AMP-for-Endpoints "Gitter chat")
+
+### AMP for Endpoints Policy Exclusion Statistics
 
 This script is intended to count the number of exclusions per policy and provide a caution or warning message regarding policies that are near or exceed the maximum number or process exclusion.
 
-## Script Execution Overview
+### Script Execution Overview
 
 1. Connects to the Cisco AMP for Endpoints API.
 2. Enumerates all of the policies in the environment.
@@ -12,7 +14,7 @@ This script is intended to count the number of exclusions per policy and provide
 6. Stores the tables in .csv format to the "output" folder.
 7. Generates a Caution and Warning message for policies that have a large number of process exclusions.
 
-## Before Using
+### Before Using
 
 You must update the following:
 
@@ -31,13 +33,13 @@ You must update the following:
 python policy_exclusions_stats.py
 ```
 
-## File Output
+### File Output
 
 - Policy.xml Files: Policy.xml files are stored as *policy_name*.xml in the ```.\output\policy_files\``` folder.
 - Path_exculsions.csv File: The count of path exclusions by policy name can be found at ```.\output\path_exclusions.csv```.
 - Process_exclusions.csv File: The count of process exclusions by policy name can be found at ```.\output\process_exclusions.csv``` file. This output file includes the number of process exclusions that apply to all child processes which is not included in the screen output.
 
-## Example Script Screen Output
+### Example Script Screen Output
 
 ``+--------------------------------------------+--------+------------------+------------+--------------------+``  
 ``| Policy Name                                |   Path |   File Extension |   Wildcard |   Total Exclusions |``  
