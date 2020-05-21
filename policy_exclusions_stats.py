@@ -363,8 +363,16 @@ class AMP4EP():
         pvt_process = pvt_process.drop(columns=['File Scan Child',
                                                 'System Process Protection Child',
                                                 'Malicious Activity Child'])
+
+        pvt_process = pvt_process.rename(columns={'File Scan': 'FS',
+                                                  'System Process Protection': 'SPP',
+                                                  'Malicious Activity': 'MA'})
+
         print('Process exclusion types by policy')
         print(tabulate(pvt_process, headers='keys', tablefmt="psql"))
+        print('    FS = File Scan')
+        print('    SPP = System Process Protection')
+        print('    MA = Malicious Activity')
         print()
 
         if len(caution_list) > 0:

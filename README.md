@@ -39,33 +39,36 @@ python policy_exclusions_stats.py
 
 ## Example Script Screen Output
 
->``+--------------------------------------------+--------+------------------+------------+--------------------+``
->``| Policy Name                                |   Path |   File Extension |   Wildcard |   Total Exclusions |``
->``|--------------------------------------------+--------+------------------+------------+--------------------|``
->``| Built-In Mac                               |      6 |                0 |          2 |                  8 |``
->``| Built-In Windows                           |     15 |                5 |          6 |                 26 |``
->``| NAME - Audit                               |     60 |                5 |         60 |                125 |``
->``| NAME - Debugging                           |     28 |                5 |         34 |                 67 |``
->``| NAME - Protect                             |     28 |                5 |         34 |                 67 |``
->``| NAME - Standard                            |    152 |               28 |         96 |                276 |``
->``| SHWM - Test - May 2020                     |    137 |               28 |         88 |                253 |``
->``+--------------------------------------------+--------+------------------+------------+--------------------+``
->`` ``
->``Process exclusion types by policy``
->``+--------------------------------------------+-------------+-----------------------------+----------------------+--------------------+``
->``| Policy Name                                |   File Scan |   System Process Protection |   Malicious Activity |   Total Exclusions |``
->``|--------------------------------------------+-------------+-----------------------------+----------------------+--------------------|``
->``| Built-In Mac                               |           2 |                           0 |                    0 |                  2 |``
->``| Built-In Windows                           |           3 |                           0 |                    1 |                  4 |``
->``| NAME - Audit                               |          40 |                           3 |                    1 |                 44 |``
->``| NAME - Debugging                           |          17 |                           2 |                    1 |                 20 |``
->``| NAME - Protect                             |          17 |                           2 |                    1 |                 20 |``
->``| NAME - Standard                            |          84 |                          24 |                    2 |                110 |``
->``| NAME - Test - May 2020                     |          74 |                          24 |                    2 |                100 |``
->``+--------------------------------------------+-------------+-----------------------------+----------------------+--------------------+``
->`` ``
->``CAUTION: Policy has close to the maximum of 100 process exceptions.``
->``         "NAME - Test - May 2020" has 100 exceptions``
->`` ``
->``WARNING: Policy exceeds the maximum 100 process exceptions.``
->``         "NAME - Standard" has 110 exceptions``
+``+--------------------------------------------+--------+------------------+------------+--------------------+``
+``| Policy Name                                |   Path |   File Extension |   Wildcard |   Total Exclusions |``
+``|--------------------------------------------+--------+------------------+------------+--------------------|``
+``| Built-In Mac                               |      6 |                0 |          2 |                  8 |``
+``| Built-In Windows                           |     15 |                5 |          6 |                 26 |``
+``| NAME - Audit                               |     60 |                5 |         60 |                125 |``
+``| NAME - Debugging                           |     28 |                5 |         34 |                 67 |``
+``| NAME - Protect                             |     28 |                5 |         34 |                 67 |``
+``| NAME - Standard                            |    152 |               28 |         96 |                276 |``
+``| SHWM - Test - May 2020                     |    137 |               28 |         88 |                253 |``
+``+--------------------------------------------+--------+------------------+------------+--------------------+``
+`` ``
+``Process exclusion types by policy``
+``+--------------------------------------------+------+-------+------+--------------------+``
+``| Policy Name                                |   FS |   SPP |   MA |   Total Exclusions |``
+``|--------------------------------------------+------+-------+------+--------------------|``
+``| Built-In Mac                               |    2 |     0 |    0 |                  2 |``
+``| Built-In Windows                           |    3 |     0 |    1 |                  4 |``
+``| NAME - Audit                               |   40 |     3 |    1 |                 44 |``
+``| NAME - Debugging                           |   17 |     2 |    1 |                 20 |``
+``| NAME - Protect                             |   17 |     2 |    1 |                 20 |``
+``| NAME - Standard                            |   84 |    24 |    2 |                110 |``
+``| NAME - Test - May 2020                     |   74 |    24 |    2 |                100 |``
+``+--------------------------------------------+------+-------+------+--------------------+``
+``    FS = File Scan``
+``    SPP = System Process Protection``
+``    MA = Malicious Activity``
+`` ``
+``CAUTION: Policy has close to the maximum of 100 process exceptions.``
+``         "NAME - Test - May 2020" has 100 exceptions``
+`` ``
+``WARNING: Policy exceeds the maximum 100 process exceptions.``
+``         "NAME - Standard" has 110 exceptions``
