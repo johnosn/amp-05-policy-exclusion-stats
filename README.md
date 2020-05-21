@@ -35,9 +35,9 @@ python policy_exclusions_stats.py
 
 ### File Output
 
-- Policy.xml Files: Policy.xml files are stored as *policy_name*.xml in the ```.\output\policy_files\``` folder.
-- Path_exculsions.csv File: The count of path exclusions by policy name can be found at ```.\output\path_exclusions.csv```.
-- Process_exclusions.csv File: The count of process exclusions by policy name can be found at ```.\output\process_exclusions.csv``` file. This output file includes the number of process exclusions that apply to all child processes which is not included in the screen output.
+- ***policy_name*.xml:** Policy.xml files are stored as *policy_name*.xml in the ```.\output\policy_files\``` folder.
+- **Path_exculsions.csv:** The count of path exclusions by policy name can be found at ```.\output\path_exclusions.csv```.
+- **Process_exclusions.csv:** The count of process exclusions by policy name can be found at ```.\output\process_exclusions.csv``` file. This output file includes the number of process exclusions that apply to all child processes which is not included in the screen output.
 
 ### Example Script Screen Output
 
