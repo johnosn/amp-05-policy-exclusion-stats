@@ -1,0 +1,6 @@
+# requirements.in
+requests
+keyring
+pandas
+tabulate
+numpy
