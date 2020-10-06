@@ -76,29 +76,29 @@ class AMP4EP():
     Attributes
     ----------
         cfg_file:   Configuration file path
-        client_id:  Cisco AMP for ENdpoint API Client ID
+        client_id:  Cisco AMP for Endpoint API Client ID
         limit:      Number of policies to return
         url:        Cisco AMP for Endpoints API address
         clt_pwd:    Cisco AMP for Endpoints API password
         session:    Request dession to the AMP API
     """
 
-    ### Set the config file path
+    # Set the config file path
     cfg_file = r'.\config\api.cfg'
 
-    ### Read the config file
+    # Read the config file
     config = configparser.ConfigParser()
     config.read(cfg_file)
 
-    ### Parse settings from config file and assign to class attributes
+    # Parse settings from config file and assign to class attributes
     clt_id = config.get('AMP', 'amp_client_id')
     limit = config.get('AMP', 'limit')
     url = config.get('AMP', 'amp_host')
 
-    ### Get password from the keyring
+    # Get password from the keyring
     clt_pwd = keyring.get_password("AMP", clt_id)
 
-    ### Create AMP session
+    # Create AMP session
     session = requests.session()
     session.auth = (clt_id, clt_pwd)
 
@@ -201,10 +201,12 @@ class AMP4EP():
         LOG.debug('Attempting to find path exclusions for \"%s\"', p_name)
 
         # Get Exclusions
-        for xml_exclusion in xml.iter('{http://www.w3.org/2000/09/xmldsig#}exclusions'):
+        for xml_exclusion in xml.iter(
+                '{http://www.w3.org/2000/09/xmldsig#}exclusions'):
 
             # Get Path Exclusions
-            for xml_path in xml_exclusion.iter('{http://www.w3.org/2000/09/xmldsig#}info'):
+            for xml_path in xml_exclusion.iter(
+                    '{http://www.w3.org/2000/09/xmldsig#}info'):
                 for xml_item in xml_path:
                     e_class = 'path'
                     exclusion = xml_item.text.split("|")
@@ -245,8 +247,10 @@ class AMP4EP():
         LOG.debug('Attempting to find process exclusions for \"%s\"', p_name)
 
         # Get Process Exclusions
-        for xml_exclusion in xml.iter('{http://www.w3.org/2000/09/xmldsig#}exclusions'):
-            for xml_process in xml_exclusion.iter('{http://www.w3.org/2000/09/xmldsig#}process'):
+        for xml_exclusion in xml.iter(
+                '{http://www.w3.org/2000/09/xmldsig#}exclusions'):
+            for xml_process in xml_exclusion.iter(
+                    '{http://www.w3.org/2000/09/xmldsig#}process'):
                 for xml_item in xml_process:
                     e_class = 'process'
                     exclusion = xml_item.text.split("|")
@@ -261,12 +265,19 @@ class AMP4EP():
                               'Exclusion Flag': int(e_flag),
                               'File Scan Child': bool(e_flag & (0b1 << 0)),
                               'Scan Files Written': bool(e_flag & (0b1 << 1)),
-                              'System Process Protection': bool(e_flag & (0b1 << 2)),
-                              'System Process Protection Child': bool(e_flag & (0b1 << 3)),
+                              'System Process Protection': bool(
+                                  e_flag & (0b1 << 2)),
+                              'System Process Protection Child': bool(
+                                  e_flag & (0b1 << 3)),
                               'Malicious Activity': bool(e_flag & (0b1 << 4)),
-                              'Malicious Activity Child': bool(e_flag & (0b1 << 5)),
+                              'Malicious Activity Child': bool(
+                                  e_flag & (0b1 << 5)),
                               'Self Protect': bool(e_flag & (0b1 << 6)),
-                              'Self Protect Child': bool(e_flag & (0b1 << 7))}
+                              'Self Protect Child': bool(e_flag & (0b1 << 7)),
+                              'Behavioral Protection': bool(
+                                  e_flag & (0b1 << 8)),
+                              'Behavioral Protection Child': bool(
+                                  e_flag & (0b1 << 9))}
                     e_processes = e_processes.append(e_item, ignore_index=True)
         return e_processes
 
@@ -308,7 +319,8 @@ class AMP4EP():
 
         # Calculate Process Exclusions
         LOG.debug('Creating Process Exclusion Summary')
-        process['File Scan'] = process['Exclusion Flag'].apply(lambda x: x in range(0, 3), True)
+        process['File Scan'] = process['Exclusion Flag'].apply(
+            lambda x: x in range(0, 3), True)
         pvt_process = pd.pivot_table(process,
                                      values=['Policy GUID',
                                              'File Scan',
@@ -316,20 +328,41 @@ class AMP4EP():
                                              'System Process Protection',
                                              'System Process Protection Child',
                                              'Malicious Activity',
-                                             'Malicious Activity Child'],
+                                             'Malicious Activity Child',
+                                             'Self Protect',
+                                             'Self Protect Child',
+                                             'Behavioral Protection',
+                                             'Behavioral Protection Child'],
                                      index='Policy Name',
                                      aggfunc={'Policy GUID': len,
                                               'File Scan': np.sum,
                                               'File Scan Child': np.sum,
-                                              'System Process Protection': np.sum,
-                                              'System Process Protection Child': np.sum,
+                                              'System Process Protection':
+                                                  np.sum,
+                                              'System Process Protection Child':
+                                                  np.sum,
                                               'Malicious Activity': np.sum,
-                                              'Malicious Activity Child': np.sum},
+                                              'Malicious Activity Child':
+                                                  np.sum,
+                                              'Self Protect': np.sum,
+                                              'Self Protect Child': np.sum,
+                                              'Behavioral Protection': np.sum,
+                                              'Behavioral Protection Child':
+                                                  np.sum},
                                      fill_value=0)
-        pvt_process = pvt_process.rename(columns={'Policy GUID': 'Total Exclusions'})
-        pvt_process = pvt_process[['File Scan', 'File Scan Child', 'System Process Protection',
-                                   'System Process Protection Child', 'Malicious Activity',
-                                   'Malicious Activity Child', 'Total Exclusions']]
+        pvt_process = pvt_process.rename(columns={'Policy GUID':
+                                                  'Total Exclusions'})
+        pvt_process = pvt_process[['File Scan',
+                                   'File Scan Child',
+                                   'System Process Protection',
+                                   'System Process Protection Child',
+                                   'Malicious Activity',
+                                   'Malicious Activity Child',
+                                   'Self Protect',
+                                   'Self Protect Child',
+                                   'Behavioral Protection',
+                                   'Behavioral Protection Child',
+                                   'Total Exclusions']]
 
         # Caution level policies
         LOG.debug('Find policies with 90 - 100 Process Exclusions')
@@ -360,33 +393,60 @@ class AMP4EP():
         print(tabulate(path_exc, headers='keys', tablefmt="psql"))
         print()
 
-        pvt_process = pvt_process.drop(columns=['File Scan Child',
-                                                'System Process Protection Child',
-                                                'Malicious Activity Child'])
+        pvt_process = pvt_process.drop(
+            columns=['File Scan Child',
+                     'System Process Protection Child',
+                     'Malicious Activity Child',
+                     'Self Protect Child',
+                     'Behavioral Protection Child'])
 
-        pvt_process = pvt_process.rename(columns={'File Scan': 'FS',
-                                                  'System Process Protection': 'SPP',
-                                                  'Malicious Activity': 'MA'})
+        pvt_process = pvt_process.rename(
+            columns={'File Scan': 'FS',
+                     'System Process Protection': 'SPP',
+                     'Malicious Activity': 'MA',
+                     'Self Protect': 'SP',
+                     'Behavioral Protection': 'BP'})
 
         print('Process exclusion types by policy')
         print(tabulate(pvt_process, headers='keys', tablefmt="psql"))
+        print('    BP = Behavioral Protection')
         print('    FS = File Scan')
-        print('    SPP = System Process Protection')
         print('    MA = Malicious Activity')
+        print('    SP = Self Protect')
+        print('    SPP = System Process Protection')
         print()
 
+        if len(caution_list) + len(warning_list) > 0:
+            print('Windows Connector Process Exclusion Limits')
+            print('------------------------------------------')
+            print('Windows connectors prior to version 5.x.x do not support '
+                  'process exclusions.')
+            print('Windows connectors versions 5.x.x - 6.0.3 allow a '
+                  'maximum of 25 process exclusions.')
+            print('Windows connectors versions 6.0.5 - 7.2.13 allow a '
+                  'maximum of 100 process exclusions.')
+            print('Windows connectors version 7.3.1 and above allow a '
+                  'maximum of 500 process exclusions.')
+            print()
+
         if len(caution_list) > 0:
-            print('CAUTION: Policy has close to the maximum of 100 process exceptions.')
+            print(Fore.CYAN + Back.MAGENTA + Style.BRIGHT + 'CAUTION:'
+                  + Style.RESET_ALL + ' Policy close to maximum 100 process'
+                  ' exceptions.')
             for index, row in caution_list.iterrows():
-                print('         \"{0}\" has {1} exceptions'.format(row['Policy Name'],
-                                                                   int(row['Total Exclusions'])))
+                print('         \"{0}\" has {1} exceptions'.format(
+                    row['Policy Name'],
+                    int(row['Total Exclusions'])))
             print()
 
         if len(warning_list) > 0:
-            print('WARNING: Policy exceeds the maximum 100 process exceptions.')
+            print(Fore.YELLOW + Back.RED + Style.BRIGHT + 'WARNING:'
+                  + Style.RESET_ALL + ' Policy exceeds maximum 100 process'
+                  ' exceptions.')
             for index, row in warning_list.iterrows():
-                print('         \"{0}\" has {1} exceptions'.format(row['Policy Name'],
-                                                                   int(row['Total Exclusions'])))
+                print('         \"{0}\" has {1} exceptions'.format(
+                    row['Policy Name'],
+                    int(row['Total Exclusions'])))
             print()
 
 
@@ -410,18 +470,19 @@ class HttpResp:
         None.
 
         """
-        ### Set logging references
+        # Set logging references
         mthd = 'HTTPRESPONSE.STATUS:'
 
-        ### Create log message
+        # Create log message
         code = response.status_code
         reason = response.reason
-        log_msg = "{0} Found HTTP {1} {2} for {3}".format(mthd, code, reason, query)
+        log_msg = "{0} Found HTTP {1} {2} for {3}".format(
+            mthd, code, reason, query)
 
-        ### Check if success
+        # Check if success
         if response.status_code // 100 != 2:
 
-            ### Log error
+            # Log error
             LOG.error(log_msg)
 
         else:
@@ -442,21 +503,24 @@ def main():
     # Multi threaded policy collection and evaluationa
     LOG.info('Starting multi-threaded policy collection and evaluation')
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        future_get_policy = {executor.submit(AMP4EP.get_policy,
-                                             policy): policy for policy in policies}
+        future_get_policy = {executor.submit(
+            AMP4EP.get_policy, policy): policy for policy in policies}
 
         for future in concurrent.futures.as_completed(future_get_policy):
             policy = future_get_policy[future]
             policy_xml = future.result()
 
-            p_paths = executor.submit(AMP4EP.parse_path_exclusions, policy, policy_xml)
+            p_paths = executor.submit(
+                AMP4EP.parse_path_exclusions, policy, policy_xml)
             if p_paths.result() is not None:
                 df_paths = df_paths.append(p_paths.result(), ignore_index=True)
 
             # Get Process Exclusions
-            p_processes = executor.submit(AMP4EP.parse_process_exclusions, policy, policy_xml)
+            p_processes = executor.submit(
+                AMP4EP.parse_process_exclusions, policy, policy_xml)
             if p_processes.result() is not None:
-                df_processes = df_processes.append(p_processes.result(), ignore_index=True)
+                df_processes = df_processes.append(
+                    p_processes.result(), ignore_index=True)
     LOG.info('Completed multi-threaded policy collection and evaluation')
 
     # Review Exclusions
@@ -468,11 +532,11 @@ def main():
 
 if __name__ == "__main__":
 
-    ### Setup Logging
+    # Setup Logging
     fileConfig(r'.\config\logging.cfg',
                defaults={'logfilename': r'.\logs\script.log'})
     LOG = logging.getLogger('script_logger')
     LOG.setLevel(logging.DEBUG)
 
-    ### Start Main
+    # Start Main
     main()
